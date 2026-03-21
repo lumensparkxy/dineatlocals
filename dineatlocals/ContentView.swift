@@ -1,61 +1,64 @@
-//
-//  ContentView.swift
-//  dineatlocals
-//
-//  Created by vivek maswadkar on 20.03.2026.
-//
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentView: View {
+    @Environment(AppModel.self) private var appModel
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
+        ZStack {
+            MarketplaceRootView()
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            if appModel.isLoading && appModel.currentUser == nil {
+                ProgressView("Loading DineAtLocals")
+                    .padding(24)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 18))
             }
         }
+        .task {
+            await appModel.loadIfNeeded()
+            appModel.syncDiscoveryCache(using: modelContext)
+        }
+        .onChange(of: appModel.experiences) { _, _ in
+            appModel.syncDiscoveryCache(using: modelContext)
+        }
+        .alert("Something went wrong", isPresented: Binding(
+            get: { appModel.errorMessage != nil },
+            set: { if !$0 { appModel.errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {
+                appModel.errorMessage = nil
+            }
+        } message: {
+            Text(appModel.errorMessage ?? "")
+        }
+        .overlay(alignment: .bottom) {
+            if let noticeMessage = appModel.noticeMessage {
+                NoticeBanner(message: noticeMessage)
+                    .padding(.bottom, 12)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: appModel.noticeMessage)
+    }
+}
+
+private struct NoticeBanner: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .font(.subheadline.weight(.semibold))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .foregroundStyle(.white)
+            .background(Color.accentColor.gradient, in: Capsule())
+            .shadow(radius: 10, y: 4)
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .environment(AppModel.preview())
+        .modelContainer(for: CachedExperienceRecord.self, inMemory: true)
 }

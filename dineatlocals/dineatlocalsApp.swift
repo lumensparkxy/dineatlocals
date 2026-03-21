@@ -1,23 +1,18 @@
-//
-//  dineatlocalsApp.swift
-//  dineatlocals
-//
-//  Created by vivek maswadkar on 20.03.2026.
-//
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct dineatlocalsApp: App {
-    var sharedModelContainer: ModelContainer = {
+    @State private var appModel = AppModel.preview()
+
+    private let sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            CachedExperienceRecord.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, configurations: [configuration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -26,6 +21,7 @@ struct dineatlocalsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(appModel)
         }
         .modelContainer(sharedModelContainer)
     }

@@ -1,41 +1,89 @@
-//
-//  dineatlocalsUITests.swift
-//  dineatlocalsUITests
-//
-//  Created by vivek maswadkar on 20.03.2026.
-//
-
 import XCTest
 
 final class dineatlocalsUITests: XCTestCase {
-
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testDiscoverFlowShowsExperienceCalendar() throws {
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCTAssertTrue(app.tabBars.buttons["Discover"].waitForExistence(timeout: 5))
+        app.buttons["Roman Dinner Around Family Recipes"].tap()
+
+        XCTAssertTrue(app.buttons["Send Booking Request"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.otherElements["experience.detail.calendar"].exists)
+        XCTAssertTrue(app.staticTexts["Time And Place"].exists)
+
+        let selectableDate = app.buttons["experience.detail.calendar.day.\(dayIdentifier(daysFromToday: 2))"]
+        XCTAssertTrue(selectableDate.waitForExistence(timeout: 5))
+        selectableDate.tap()
     }
 
     @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+    func testHostCanOpenCreateSheetAndPublishRangeExperience() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.tabBars.buttons["Host"].tap()
+        XCTAssertTrue(app.buttons["Create Experience"].waitForExistence(timeout: 5))
+        app.buttons["Create Experience"].tap()
+
+        XCTAssertTrue(app.otherElements["host.create.calendar"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.otherElements["host.schedule.start"].exists)
+        XCTAssertTrue(app.otherElements["host.schedule.end"].exists)
+        XCTAssertTrue(app.otherElements["host.schedule.time"].exists)
+
+        let titleField = app.textFields["host.experience.title"]
+        titleField.tap()
+        titleField.typeText("Range Test Dinner")
+
+        let cuisineField = app.textFields["host.experience.cuisine"]
+        cuisineField.tap()
+        cuisineField.typeText("Coastal Indian")
+
+        if app.textViews["host.experience.description"].exists {
+            let descriptionField = app.textViews["host.experience.description"]
+            descriptionField.tap()
+            descriptionField.typeText("A warm dinner with a few blocked dates.")
+        } else {
+            let descriptionField = app.textFields["host.experience.description"]
+            descriptionField.tap()
+            descriptionField.typeText("A warm dinner with a few blocked dates.")
         }
+
+        let addressField = app.textFields["host.experience.address"]
+        addressField.tap()
+        addressField.typeText("Testing Street 5")
+
+        let blockedDate = app.buttons["host.create.calendar.day.\(dayIdentifier(daysFromToday: 2))"]
+        XCTAssertTrue(blockedDate.waitForExistence(timeout: 5))
+        blockedDate.tap()
+
+        app.buttons["host.publishExperience"].tap()
+        XCTAssertTrue(app.staticTexts["Range Test Dinner"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testHostingAndRequestInboxAppear() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.tabBars.buttons["Host"].tap()
+        XCTAssertTrue(app.buttons["Create Experience"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Kerala Lunch With Spice Stories"].exists)
+
+        app.tabBars.buttons["Requests"].tap()
+        app.buttons["requests.inbox.hosting"].tap()
+        XCTAssertTrue(app.buttons["Accept"].waitForExistence(timeout: 5))
+    }
+
+    private func dayIdentifier(daysFromToday: Int) -> String {
+        let calendar = Calendar(identifier: .gregorian)
+        let date = calendar.date(byAdding: .day, value: daysFromToday, to: Date()) ?? Date()
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        return String(format: "%04d-%02d-%02d", components.year ?? 1970, components.month ?? 1, components.day ?? 1)
     }
 }
