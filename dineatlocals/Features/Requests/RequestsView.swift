@@ -5,7 +5,7 @@ struct RequestsView: View {
     @State private var selectedInbox: Inbox = .guest
 
     private let theme = FestiveTabTheme.requests
-    private let statColumns = [GridItem(.adaptive(minimum: 106), spacing: 10)]
+    private let statColumns = [GridItem(.adaptive(minimum: 118), spacing: 10)]
 
     private enum Inbox: String, CaseIterable, Identifiable {
         case guest
@@ -41,8 +41,8 @@ struct RequestsView: View {
                     header
                     inboxContent
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 18)
+                .padding(.horizontal, 18)
+                .padding(.top, 20)
                 .padding(.bottom, 32)
             }
         }
@@ -164,7 +164,7 @@ private struct RequestCard: View {
                     }
 
                     Text(request.experienceTitle)
-                        .font(.title3.weight(.black))
+                        .font(.system(size: 24, weight: .semibold, design: .serif))
                         .foregroundStyle(theme.ink)
 
                     Text(hostCanAct ? "Guest: \(request.guestName)" : "Host: \(request.hostName)")
@@ -203,7 +203,7 @@ private struct RequestCard: View {
                 .foregroundStyle(theme.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(16)
-                .background(Color.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background(SupperClubPalette.paperWarm.opacity(0.55), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
     }
 
@@ -228,12 +228,12 @@ private struct RequestCard: View {
                 Button("Accept") {
                     Task { await appModel.updateRequestStatus(.accepted, request: request) }
                 }
-                .buttonStyle(FestiveActionButtonStyle(tint: Color.green.opacity(0.92)))
+                .buttonStyle(FestiveActionButtonStyle(tint: SupperClubPalette.sage))
 
                 Button("Decline") {
                     Task { await appModel.updateRequestStatus(.declined, request: request) }
                 }
-                .buttonStyle(FestiveActionButtonStyle(tint: Color(red: 0.72, green: 0.30, blue: 0.28)))
+                .buttonStyle(FestiveActionButtonStyle(tint: SupperClubPalette.oxblood))
             }
         } else if !hostCanAct && (request.status == .pending || request.status == .accepted) {
             Button("Cancel Request") {
@@ -253,7 +253,7 @@ private struct RequestStatusPill: View {
             .foregroundStyle(style.tint)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .background(style.tint.opacity(0.14), in: Capsule())
+            .background(style.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
@@ -267,32 +267,32 @@ private struct RequestStatusStyle {
         case .pending:
             RequestStatusStyle(
                 title: status.title,
-                tint: Color(red: 0.88, green: 0.48, blue: 0.17),
-                surface: Color(red: 1.00, green: 0.95, blue: 0.89)
+                tint: SupperClubPalette.amber,
+                surface: SupperClubPalette.paper
             )
         case .accepted:
             RequestStatusStyle(
                 title: status.title,
-                tint: Color(red: 0.18, green: 0.58, blue: 0.34),
-                surface: Color(red: 0.94, green: 0.98, blue: 0.93)
+                tint: SupperClubPalette.sage,
+                surface: SupperClubPalette.paper
             )
         case .declined:
             RequestStatusStyle(
                 title: status.title,
-                tint: Color(red: 0.76, green: 0.29, blue: 0.27),
-                surface: Color(red: 0.99, green: 0.93, blue: 0.92)
+                tint: SupperClubPalette.oxblood,
+                surface: SupperClubPalette.paper
             )
         case .cancelled:
             RequestStatusStyle(
                 title: status.title,
-                tint: Color(red: 0.43, green: 0.44, blue: 0.47),
-                surface: Color(red: 0.96, green: 0.95, blue: 0.94)
+                tint: SupperClubPalette.muted,
+                surface: SupperClubPalette.paper
             )
         case .completed:
             RequestStatusStyle(
                 title: status.title,
-                tint: Color(red: 0.17, green: 0.47, blue: 0.71),
-                surface: Color(red: 0.93, green: 0.97, blue: 0.99)
+                tint: SupperClubPalette.sage,
+                surface: SupperClubPalette.paper
             )
         }
     }

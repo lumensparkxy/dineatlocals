@@ -12,7 +12,7 @@ enum ExperienceSlotAvailability: String, Codable, Sendable {
     case blockedByHost
 }
 
-struct DayKey: Hashable, Codable, Comparable, Identifiable, Sendable {
+nonisolated struct DayKey: Hashable, Codable, Comparable, Identifiable, Sendable {
     let year: Int
     let month: Int
     let day: Int

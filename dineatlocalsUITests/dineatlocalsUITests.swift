@@ -13,13 +13,17 @@ final class dineatlocalsUITests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["Discover"].waitForExistence(timeout: 5))
         app.buttons["Roman Dinner Around Family Recipes"].tap()
 
-        XCTAssertTrue(app.buttons["Send Booking Request"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Around the table"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Request a seat"].exists)
+
+        app.buttons["View all dates"].tap()
         XCTAssertTrue(app.otherElements["experience.detail.calendar"].exists)
-        XCTAssertTrue(app.staticTexts["Time And Place"].exists)
 
         let selectableDate = app.buttons["experience.detail.calendar.day.\(dayIdentifier(daysFromToday: 2))"]
         XCTAssertTrue(selectableDate.waitForExistence(timeout: 5))
         selectableDate.tap()
+
+        XCTAssertTrue(app.staticTexts["Time and place"].waitForExistence(timeout: 5))
     }
 
     @MainActor

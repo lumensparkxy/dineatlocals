@@ -101,7 +101,7 @@ struct HostingView: View {
                     Label("Create Experience", systemImage: "plus.circle.fill")
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(FestiveActionButtonStyle(tint: theme.secondaryAccent, foreground: theme.ink))
+                .buttonStyle(FestiveActionButtonStyle(tint: theme.secondaryAccent))
                 .accessibilityIdentifier("host.createExperience")
             }
         }
@@ -360,18 +360,18 @@ private struct HostExperienceCard: View {
         VStack(alignment: .leading, spacing: 0) {
             headerSection
             .padding(20)
-            .background(style.heroGradient)
+            .background(style.accent)
 
             detailsSection
             .padding(20)
             .background(style.surface)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .stroke(style.border.opacity(0.72), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(style.border, lineWidth: 1)
         )
-        .shadow(color: style.accent.opacity(0.10), radius: 18, y: 10)
+        .shadow(color: SupperClubPalette.warmShadow.opacity(0.05), radius: 12, y: 6)
         .sheet(isPresented: $isAvailabilityPresented) {
             ManageAvailabilitySheet(isPresented: $isAvailabilityPresented, experienceID: experience.id)
                 .presentationDetents([.large])
@@ -475,7 +475,7 @@ private struct HostExperienceCard: View {
             Button("Manage Availability") {
                 isAvailabilityPresented = true
             }
-            .buttonStyle(FestiveActionButtonStyle(tint: Color.white.opacity(0.74), foreground: style.ink))
+            .buttonStyle(FestiveActionButtonStyle(tint: style.softTint, foreground: style.ink))
             .accessibilityIdentifier("host.manageAvailability")
 
             Button(experience.publishState == .published ? "Pause Listing" : "Publish Again") {
@@ -483,7 +483,7 @@ private struct HostExperienceCard: View {
                     await appModel.togglePublish(for: experience)
                 }
             }
-            .buttonStyle(FestiveActionButtonStyle(tint: experience.publishState == .published ? Color(red: 0.76, green: 0.35, blue: 0.25) : style.accent))
+            .buttonStyle(FestiveActionButtonStyle(tint: experience.publishState == .published ? SupperClubPalette.oxblood : style.accent))
         }
     }
 }
@@ -594,10 +594,10 @@ private struct CreateExperienceSheet: View {
                                 Stepper("Seats: \(draft.maxSeats)", value: $draft.maxSeats, in: 1...12)
                                     .padding(.horizontal, 14)
                                     .padding(.vertical, 12)
-                                    .background(Color.white.opacity(0.84), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                    .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                            .stroke(theme.border.opacity(0.64), lineWidth: 1)
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                            .stroke(theme.border, lineWidth: 1)
                                     )
                             }
 
@@ -618,10 +618,10 @@ private struct CreateExperienceSheet: View {
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 12)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.white.opacity(0.84), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .stroke(theme.border.opacity(0.64), lineWidth: 1)
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .stroke(theme.border, lineWidth: 1)
                                 )
                                 .accessibilityIdentifier("host.schedule.start")
 
@@ -636,10 +636,10 @@ private struct CreateExperienceSheet: View {
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 12)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.white.opacity(0.84), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .stroke(theme.border.opacity(0.64), lineWidth: 1)
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .stroke(theme.border, lineWidth: 1)
                                 )
                                 .accessibilityIdentifier("host.schedule.end")
 
@@ -653,10 +653,10 @@ private struct CreateExperienceSheet: View {
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 12)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.white.opacity(0.84), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .stroke(theme.border.opacity(0.64), lineWidth: 1)
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .stroke(theme.border, lineWidth: 1)
                                 )
                                 .accessibilityIdentifier("host.schedule.time")
                             }
@@ -696,7 +696,7 @@ private struct CreateExperienceSheet: View {
                                     )
                                     .accessibilityIdentifier("host.create.calendar")
                                     .padding(14)
-                                    .background(Color.white.opacity(0.70), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                                    .background(SupperClubPalette.paperWarm.opacity(0.65), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                                 }
                             }
 
@@ -976,7 +976,7 @@ private struct ManageAvailabilitySheet: View {
             )
             .accessibilityIdentifier("host.manage.calendar")
             .padding(14)
-            .background(Color.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(SupperClubPalette.paperWarm.opacity(0.62), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
     }
 

@@ -18,39 +18,39 @@ struct FestiveTabTheme {
 
 extension FestiveTabTheme {
     static let requests = FestiveTabTheme(
-        heroTop: Color(red: 0.97, green: 0.54, blue: 0.42),
-        heroBottom: Color(red: 0.78, green: 0.27, blue: 0.26),
-        accent: Color(red: 0.89, green: 0.35, blue: 0.22),
-        secondaryAccent: Color(red: 0.18, green: 0.48, blue: 0.54),
-        surface: Color(red: 0.99, green: 0.94, blue: 0.91),
-        border: Color(red: 0.90, green: 0.72, blue: 0.60),
-        ink: Color(red: 0.18, green: 0.10, blue: 0.11),
-        mutedInk: Color(red: 0.36, green: 0.22, blue: 0.18),
-        softTint: Color(red: 1.00, green: 0.84, blue: 0.72)
+        heroTop: SupperClubPalette.oxblood,
+        heroBottom: SupperClubPalette.aubergine,
+        accent: SupperClubPalette.oxblood,
+        secondaryAccent: SupperClubPalette.sage,
+        surface: SupperClubPalette.paper,
+        border: SupperClubPalette.border,
+        ink: SupperClubPalette.ink,
+        mutedInk: SupperClubPalette.muted,
+        softTint: SupperClubPalette.blush
     )
 
     static let host = FestiveTabTheme(
-        heroTop: Color(red: 0.27, green: 0.47, blue: 0.54),
-        heroBottom: Color(red: 0.17, green: 0.28, blue: 0.36),
-        accent: Color(red: 0.15, green: 0.45, blue: 0.53),
-        secondaryAccent: Color(red: 0.94, green: 0.58, blue: 0.32),
-        surface: Color(red: 0.93, green: 0.97, blue: 0.97),
-        border: Color(red: 0.67, green: 0.81, blue: 0.83),
-        ink: Color(red: 0.08, green: 0.16, blue: 0.19),
-        mutedInk: Color(red: 0.20, green: 0.31, blue: 0.35),
-        softTint: Color(red: 0.73, green: 0.89, blue: 0.90)
+        heroTop: SupperClubPalette.sage,
+        heroBottom: SupperClubPalette.aubergine,
+        accent: SupperClubPalette.sage,
+        secondaryAccent: SupperClubPalette.oxblood,
+        surface: SupperClubPalette.paper,
+        border: SupperClubPalette.border,
+        ink: SupperClubPalette.ink,
+        mutedInk: SupperClubPalette.muted,
+        softTint: Color(red: 0.89, green: 0.92, blue: 0.84)
     )
 
     static let profile = FestiveTabTheme(
-        heroTop: Color(red: 0.92, green: 0.42, blue: 0.44),
-        heroBottom: Color(red: 0.62, green: 0.20, blue: 0.33),
-        accent: Color(red: 0.84, green: 0.32, blue: 0.29),
-        secondaryAccent: Color(red: 0.26, green: 0.58, blue: 0.57),
-        surface: Color(red: 0.99, green: 0.94, blue: 0.93),
-        border: Color(red: 0.87, green: 0.69, blue: 0.66),
-        ink: Color(red: 0.18, green: 0.10, blue: 0.12),
-        mutedInk: Color(red: 0.39, green: 0.21, blue: 0.22),
-        softTint: Color(red: 0.96, green: 0.79, blue: 0.76)
+        heroTop: SupperClubPalette.oxblood,
+        heroBottom: SupperClubPalette.aubergine,
+        accent: SupperClubPalette.oxblood,
+        secondaryAccent: SupperClubPalette.sage,
+        surface: SupperClubPalette.paper,
+        border: SupperClubPalette.border,
+        ink: SupperClubPalette.ink,
+        mutedInk: SupperClubPalette.muted,
+        softTint: SupperClubPalette.blush
     )
 }
 
@@ -82,28 +82,28 @@ struct FestiveHeroCard<Content: View>: View {
                     Text(eyebrow)
                         .font(.footnote.weight(.bold))
                         .textCase(.uppercase)
-                        .foregroundStyle(Color.white.opacity(0.74))
+                        .foregroundStyle(theme.accent)
                 }
 
                 Text(title)
-                    .font(.system(size: 34, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
+                    .font(.system(size: 32, weight: .semibold, design: .serif))
+                    .foregroundStyle(theme.ink)
 
                 Text(subtitle)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Color.white.opacity(0.86))
+                    .font(.subheadline)
+                    .foregroundStyle(theme.mutedInk)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
             content
         }
-        .padding(22)
-        .background(theme.heroGradient, in: RoundedRectangle(cornerRadius: 34, style: .continuous))
+        .padding(20)
+        .background(theme.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 34, style: .continuous)
-                .stroke(Color.white.opacity(0.24), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(theme.border, lineWidth: 1)
         )
-        .shadow(color: theme.accent.opacity(0.15), radius: 24, y: 14)
+        .shadow(color: SupperClubPalette.warmShadow.opacity(0.05), radius: 12, y: 6)
     }
 }
 
@@ -130,13 +130,13 @@ struct FestiveSectionCard<Content: View>: View {
         VStack(alignment: .leading, spacing: 16) {
             content
         }
-        .padding(20)
-        .background((fill ?? theme.surface), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .padding(18)
+        .background((fill ?? theme.surface), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .stroke(theme.border.opacity(0.78), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(theme.border, lineWidth: 1)
         )
-        .shadow(color: theme.accent.opacity(0.08), radius: 16, y: 10)
+        .shadow(color: SupperClubPalette.warmShadow.opacity(0.04), radius: 10, y: 5)
     }
 }
 
@@ -154,7 +154,7 @@ struct FestiveSectionHeading: View {
                 .foregroundStyle(theme.accent.opacity(0.86))
 
             Text(title)
-                .font(.title3.weight(.black))
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(theme.ink)
 
             if let subtitle {
@@ -192,7 +192,11 @@ struct FestiveMetricChip: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background((highlight ?? Color.white).opacity(0.76), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background((highlight ?? SupperClubPalette.paperWarm).opacity(0.72), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(theme.border.opacity(0.75), lineWidth: 1)
+        )
     }
 }
 
@@ -208,8 +212,12 @@ struct FestiveChoicePill: View {
                 .font(.subheadline.weight(.bold))
                 .foregroundStyle(isSelected ? .white : theme.ink)
                 .padding(.horizontal, 15)
-                .padding(.vertical, 11)
-                .background(isSelected ? theme.secondaryAccent : Color.white.opacity(0.78), in: Capsule())
+                .padding(.vertical, 10)
+                .background(isSelected ? theme.secondaryAccent : theme.surface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(isSelected ? Color.clear : theme.border, lineWidth: 1)
+                )
         }
         .buttonStyle(.plain)
     }
@@ -222,7 +230,7 @@ struct FestiveEmptyStateCard: View {
     let message: String
 
     var body: some View {
-        FestiveSectionCard(theme: theme, fill: Color.white.opacity(0.84)) {
+        FestiveSectionCard(theme: theme, fill: theme.surface) {
             VStack(alignment: .leading, spacing: 12) {
                 Image(systemName: symbolName)
                     .font(.system(size: 28, weight: .bold))
@@ -256,7 +264,7 @@ struct FestiveActionButtonStyle: ButtonStyle {
             .foregroundStyle(foreground)
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(tint.opacity(configuration.isPressed ? 0.82 : 1), in: Capsule())
+            .background(tint.opacity(configuration.isPressed ? 0.82 : 1), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 
@@ -267,10 +275,10 @@ private struct FestiveInputSurfaceModifier: ViewModifier {
         content
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
-            .background(Color.white.opacity(0.84), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .stroke(theme.border.opacity(0.64), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(theme.border, lineWidth: 1)
             )
             .foregroundStyle(theme.ink)
     }
