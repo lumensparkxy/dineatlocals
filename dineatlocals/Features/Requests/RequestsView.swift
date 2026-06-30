@@ -137,6 +137,10 @@ private struct RequestCard: View {
         RequestStatusStyle.make(for: request.status)
     }
 
+    private var requestIdentifier: String {
+        request.id.uuidString.lowercased()
+    }
+
     var body: some View {
         FestiveSectionCard(theme: theme, fill: statusStyle.surface) {
             VStack(alignment: .leading, spacing: 16) {
@@ -167,6 +171,7 @@ private struct RequestCard: View {
                     Text(request.experienceTitle)
                         .font(.system(size: 24, weight: .semibold, design: .serif))
                         .foregroundStyle(theme.ink)
+                        .accessibilityIdentifier("request.card.\(requestIdentifier)")
 
                     Text(hostCanAct ? "Guest: \(request.guestName)" : "Host: \(request.hostName)")
                         .font(.subheadline.weight(.semibold))
@@ -175,7 +180,10 @@ private struct RequestCard: View {
 
                 Spacer(minLength: 12)
 
-                RequestStatusPill(style: statusStyle)
+                RequestStatusPill(
+                    style: statusStyle,
+                    accessibilityIdentifier: "request.status.\(requestIdentifier)"
+                )
             }
 
             HStack(spacing: 12) {
@@ -230,11 +238,13 @@ private struct RequestCard: View {
                     Task { await appModel.updateRequestStatus(.accepted, request: request) }
                 }
                 .buttonStyle(FestiveActionButtonStyle(tint: SupperClubPalette.sage))
+                .accessibilityIdentifier("request.accept.\(requestIdentifier)")
 
                 Button("Decline") {
                     Task { await appModel.updateRequestStatus(.declined, request: request) }
                 }
                 .buttonStyle(FestiveActionButtonStyle(tint: SupperClubPalette.oxblood))
+                .accessibilityIdentifier("request.decline.\(requestIdentifier)")
             }
         } else if !hostCanAct && (request.status == .pending || request.status == .accepted) {
             Button("Cancel Request") {
@@ -247,6 +257,7 @@ private struct RequestCard: View {
 
 private struct RequestStatusPill: View {
     let style: RequestStatusStyle
+    let accessibilityIdentifier: String
 
     var body: some View {
         Text(style.title)
@@ -255,6 +266,7 @@ private struct RequestStatusPill: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(style.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
 
