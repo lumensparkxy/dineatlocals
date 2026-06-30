@@ -48,24 +48,24 @@ struct ProfileView: View {
                     HStack(alignment: .top, spacing: 12) {
                         Text(monogram(for: currentUser.fullName))
                             .font(.title2.weight(.black))
-                            .foregroundStyle(theme.ink)
+                            .foregroundStyle(.white)
                             .frame(width: 58, height: 58)
-                            .background(Color.white.opacity(0.80), in: Circle())
+                            .background(theme.accent, in: Circle())
 
                         VStack(alignment: .leading, spacing: 5) {
                             Text(currentUser.fullName)
                                 .font(.title3.weight(.black))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(theme.ink)
 
                             Text(currentUser.email)
                                 .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color.white.opacity(0.82))
+                                .foregroundStyle(theme.mutedInk)
                         }
                     }
 
                     HStack(spacing: 8) {
                         ForEach(currentUser.roles, id: \.rawValue) { role in
-                            FestiveTag(text: role.rawValue.capitalized, fill: Color.white.opacity(0.18))
+                            FestiveTag(text: role.rawValue.capitalized, fill: theme.softTint, foreground: theme.ink)
                         }
                     }
 
@@ -93,7 +93,7 @@ struct ProfileView: View {
                     .foregroundStyle(theme.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(16)
-                    .background(Color.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .background(SupperClubPalette.paperWarm.opacity(0.62), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
 
             if !parsedDietaryPreferences.isEmpty {
@@ -134,7 +134,7 @@ struct ProfileView: View {
     }
 
     private var cacheCard: some View {
-        FestiveSectionCard(theme: theme, fill: Color.white.opacity(0.72)) {
+        FestiveSectionCard(theme: theme, fill: SupperClubPalette.paper) {
             FestiveSectionHeading(
                 theme: theme,
                 eyebrow: "Offline Cache",
@@ -168,14 +168,14 @@ struct ProfileView: View {
     private func passportBadge(title: String, icon: String) -> some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .foregroundStyle(Color.white.opacity(0.92))
+                .foregroundStyle(theme.accent)
             Text(title)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(theme.ink)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(Color.white.opacity(0.16), in: Capsule())
+        .background(theme.softTint, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
     private func monogram(for name: String) -> String {

@@ -19,7 +19,7 @@ struct AvailabilityCalendarView: View {
     let canTapDay: (DayKey, AvailabilityCalendarDayState) -> Bool
     let onTapDay: (DayKey) -> Void
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
 
     private var sections: [CalendarMonthSection] {
         makeMonthSections(range: range)
@@ -34,10 +34,10 @@ struct AvailabilityCalendarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            LazyVGrid(columns: columns, spacing: 8) {
+            LazyVGrid(columns: columns, spacing: 7) {
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
-                        .font(.caption.weight(.bold))
+                        .font(.caption.weight(.semibold))
                         .foregroundStyle(ink.opacity(0.58))
                         .frame(maxWidth: .infinity)
                 }
@@ -46,10 +46,10 @@ struct AvailabilityCalendarView: View {
             ForEach(sections) { section in
                 VStack(alignment: .leading, spacing: 10) {
                     Text(section.monthStart, format: .dateTime.month(.wide).year())
-                        .font(.headline.weight(.black))
+                        .font(.headline.weight(.semibold))
                         .foregroundStyle(ink)
 
-                    LazyVGrid(columns: columns, spacing: 8) {
+                    LazyVGrid(columns: columns, spacing: 7) {
                         ForEach(section.cells) { cell in
                             if let dayKey = cell.dayKey {
                                 let state = stateForDay(dayKey)
@@ -98,7 +98,7 @@ struct AvailabilityLegend: View {
                     )
 
                     Text(item.0)
-                        .font(.caption.weight(.semibold))
+                        .font(.caption.weight(.medium))
                         .foregroundStyle(ink.opacity(0.75))
                 }
             }
@@ -131,23 +131,23 @@ private struct CalendarDayCell: View {
         VStack(spacing: 2) {
             if let systemName = symbolName {
                 Image(systemName: systemName)
-                    .font(.system(size: 9, weight: .bold))
+                    .font(.system(size: 8, weight: .bold))
                     .foregroundStyle(symbolColor)
             } else {
                 Spacer()
-                    .frame(height: 9)
+                    .frame(height: 8)
             }
 
             Text("\(dayKey.day)")
-                .font(.subheadline.weight(.bold))
+                .font(.subheadline.weight(.semibold))
                 .foregroundStyle(textColor)
                 .frame(maxWidth: .infinity)
         }
         .padding(.vertical, 7)
-        .frame(height: 44)
-        .background(background, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .frame(height: 42)
+        .background(background, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .stroke(borderColor, lineWidth: 1)
         )
         .opacity(state == .outsideRange ? 0.35 : 1)
@@ -156,17 +156,17 @@ private struct CalendarDayCell: View {
     private var background: Color {
         switch state {
         case .available:
-            Color.white.opacity(0.86)
+            SupperClubPalette.paper
         case .selected:
             accent
         case .blocked:
-            Color.black.opacity(0.08)
+            SupperClubPalette.paperWarm
         case .full:
-            Color.gray.opacity(0.18)
+            SupperClubPalette.border.opacity(0.55)
         case .locked:
             softTint
         case .outsideRange:
-            Color.white.opacity(0.28)
+            SupperClubPalette.paper.opacity(0.45)
         }
     }
 
@@ -177,7 +177,7 @@ private struct CalendarDayCell: View {
         case .outsideRange:
             Color.clear
         default:
-            accent.opacity(0.14)
+            SupperClubPalette.border
         }
     }
 
