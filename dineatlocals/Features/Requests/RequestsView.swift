@@ -45,6 +45,7 @@ struct RequestsView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 32)
             }
+            .accessibilityIdentifier("requests.scroll")
         }
         .toolbar(.hidden, for: .navigationBar)
         .refreshable {

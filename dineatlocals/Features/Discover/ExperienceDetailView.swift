@@ -315,6 +315,7 @@ struct ExperienceDetailView: View {
             }
             .buttonStyle(.plain)
             .disabled(experience.bookableSlots.isEmpty)
+            .accessibilityIdentifier("experience.detail.request")
 
             Label("No payment now. Seats are confirmed by the host.", systemImage: "checkmark.shield.fill")
                 .font(.caption.weight(.medium))
@@ -394,11 +395,13 @@ struct ExperienceDetailView: View {
                     Text("Request a seat")
                         .font(.system(size: 34, weight: .semibold, design: .serif))
                         .foregroundStyle(SupperClubPalette.oxblood)
+                        .accessibilityIdentifier("experience.request.sheet")
 
                     requestComposer(for: experience)
                 }
                 .padding(20)
             }
+            .accessibilityIdentifier("experience.request.scroll")
             .background(FestiveMarketplaceBackground())
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -428,10 +431,51 @@ struct ExperienceDetailView: View {
                         tint: SupperClubPalette.oxblood
                     )
 
-                    Stepper("Seats: \(seatsRequested)", value: $seatsRequested, in: 1...maximumSeats)
-                        .font(.subheadline.weight(.semibold))
-                        .padding(14)
-                        .background(SupperClubPalette.paperWarm.opacity(0.65), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    HStack(spacing: 12) {
+                        Text("Seats")
+                            .font(.subheadline.weight(.bold))
+                            .foregroundStyle(SupperClubPalette.ink)
+
+                        Spacer()
+
+                        Button {
+                            seatsRequested = max(1, seatsRequested - 1)
+                        } label: {
+                            Image(systemName: "minus")
+                                .font(.subheadline.weight(.bold))
+                                .frame(width: 36, height: 36)
+                                .background(SupperClubPalette.paper, in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(SupperClubPalette.ink)
+                        .disabled(seatsRequested <= 1)
+                        .accessibilityLabel("Decrease seats")
+                        .accessibilityIdentifier("experience.request.seats.decrement")
+
+                        Text("Seats: \(seatsRequested)")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(SupperClubPalette.ink)
+                            .frame(minWidth: 72)
+                            .accessibilityIdentifier("experience.request.seats.value")
+
+                        Button {
+                            seatsRequested = min(maximumSeats, seatsRequested + 1)
+                        } label: {
+                            Image(systemName: "plus")
+                                .font(.subheadline.weight(.bold))
+                                .frame(width: 36, height: 36)
+                                .background(SupperClubPalette.paper, in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(SupperClubPalette.ink)
+                        .disabled(seatsRequested >= maximumSeats)
+                        .accessibilityLabel("Increase seats")
+                        .accessibilityIdentifier("experience.request.seats.increment")
+                    }
+                    .padding(14)
+                    .background(SupperClubPalette.paperWarm.opacity(0.65), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("experience.request.seats.stepper")
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Intro message")
@@ -439,6 +483,7 @@ struct ExperienceDetailView: View {
                         TextField("Tell the host why this table fits you", text: $introMessage, axis: .vertical)
                             .lineLimit(3...5)
                             .textFieldStyle(.plain)
+                            .accessibilityIdentifier("experience.request.intro")
                             .festiveInputSurface(theme: .requests)
                     }
 
@@ -448,6 +493,7 @@ struct ExperienceDetailView: View {
                         TextField("Optional notes for the host", text: $guestNotes, axis: .vertical)
                             .lineLimit(2...4)
                             .textFieldStyle(.plain)
+                            .accessibilityIdentifier("experience.request.notes")
                             .festiveInputSurface(theme: .requests)
                     }
 
