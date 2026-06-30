@@ -36,9 +36,13 @@ final class dineatlocalsUITests: XCTestCase {
         app.buttons["Create Experience"].tap()
 
         XCTAssertTrue(app.otherElements["host.create.calendar"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.otherElements["host.schedule.start"].exists)
-        XCTAssertTrue(app.otherElements["host.schedule.end"].exists)
-        XCTAssertTrue(app.otherElements["host.schedule.time"].exists)
+        assertElementExists(app, identifier: "host.schedule.start")
+        assertElementExists(app, identifier: "host.schedule.end")
+        assertElementExists(app, identifier: "host.schedule.time")
+
+        let blockedDate = app.buttons["host.create.calendar.day.\(dayIdentifier(daysFromToday: 2))"]
+        XCTAssertTrue(scrollUntilExists(blockedDate, in: app), "Blocked date should exist")
+        blockedDate.tap()
 
         let titleField = app.textFields["host.experience.title"]
         titleField.tap()
@@ -61,10 +65,6 @@ final class dineatlocalsUITests: XCTestCase {
         let addressField = app.textFields["host.experience.address"]
         addressField.tap()
         addressField.typeText("Testing Street 5")
-
-        let blockedDate = app.buttons["host.create.calendar.day.\(dayIdentifier(daysFromToday: 2))"]
-        XCTAssertTrue(blockedDate.waitForExistence(timeout: 5))
-        blockedDate.tap()
 
         app.buttons["host.publishExperience"].tap()
         XCTAssertTrue(app.staticTexts["Range Test Dinner"].waitForExistence(timeout: 5))
@@ -89,5 +89,38 @@ final class dineatlocalsUITests: XCTestCase {
         let date = calendar.date(byAdding: .day, value: daysFromToday, to: Date()) ?? Date()
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         return String(format: "%04d-%02d-%02d", components.year ?? 1970, components.month ?? 1, components.day ?? 1)
+    }
+
+    @MainActor
+    private func assertElementExists(
+        _ app: XCUIApplication,
+        identifier: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let element = app.descendants(matching: .any)[identifier]
+        XCTAssertTrue(element.waitForExistence(timeout: 5), "\(identifier) should exist", file: file, line: line)
+    }
+
+    @MainActor
+    private func scrollUntilExists(_ element: XCUIElement, in app: XCUIApplication, attempts: Int = 10) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        let scrollView = app.scrollViews["host.create.scroll"]
+        for _ in 0..<attempts {
+            if scrollView.exists {
+                scrollView.swipeUp()
+            } else {
+                app.swipeUp()
+            }
+
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
     }
 }

@@ -607,58 +607,37 @@ private struct CreateExperienceSheet: View {
                                     .textCase(.uppercase)
                                     .foregroundStyle(theme.accent.opacity(0.84))
 
-                                DatePicker(
-                                    "Available from",
-                                    selection: $draft.availableFrom,
-                                    in: marketplaceCalendar.startOfDay(for: .now)...maximumStartDate,
-                                    displayedComponents: [.date]
-                                )
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(theme.border, lineWidth: 1)
-                                )
-                                .accessibilityIdentifier("host.schedule.start")
+                                scheduleControl(identifier: "host.schedule.start") {
+                                    DatePicker(
+                                        "Available from",
+                                        selection: $draft.availableFrom,
+                                        in: marketplaceCalendar.startOfDay(for: .now)...maximumStartDate,
+                                        displayedComponents: [.date]
+                                    )
+                                    .accessibilityLabel("Available from")
+                                    .accessibilityValue(draft.availableFrom.formatted(.dateTime.day().month().year()))
+                                }
 
-                                DatePicker(
-                                    "Available until",
-                                    selection: $draft.availableUntil,
-                                    in: marketplaceCalendar.startOfDay(for: draft.availableFrom)...maximumEndDate,
-                                    displayedComponents: [.date]
-                                )
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(theme.border, lineWidth: 1)
-                                )
-                                .accessibilityIdentifier("host.schedule.end")
+                                scheduleControl(identifier: "host.schedule.end") {
+                                    DatePicker(
+                                        "Available until",
+                                        selection: $draft.availableUntil,
+                                        in: marketplaceCalendar.startOfDay(for: draft.availableFrom)...maximumEndDate,
+                                        displayedComponents: [.date]
+                                    )
+                                    .accessibilityLabel("Available until")
+                                    .accessibilityValue(draft.availableUntil.formatted(.dateTime.day().month().year()))
+                                }
 
-                                DatePicker(
-                                    "Recurring time",
-                                    selection: $draft.serviceTime,
-                                    displayedComponents: [.hourAndMinute]
-                                )
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(theme.border, lineWidth: 1)
-                                )
-                                .accessibilityIdentifier("host.schedule.time")
+                                scheduleControl(identifier: "host.schedule.time") {
+                                    DatePicker(
+                                        "Recurring time",
+                                        selection: $draft.serviceTime,
+                                        displayedComponents: [.hourAndMinute]
+                                    )
+                                    .accessibilityLabel("Recurring time")
+                                    .accessibilityValue(draft.serviceTime.formatted(.dateTime.hour().minute()))
+                                }
                             }
 
                             if let availabilityRange {
@@ -708,6 +687,7 @@ private struct CreateExperienceSheet: View {
                     .padding(.top, 18)
                     .padding(.bottom, 28)
                 }
+                .accessibilityIdentifier("host.create.scroll")
             }
             .navigationTitle("New Experience")
             .navigationBarTitleDisplayMode(.inline)
@@ -777,6 +757,21 @@ private struct CreateExperienceSheet: View {
                 content()
             }
         }
+    }
+
+    private func scheduleControl<Content: View>(identifier: String, @ViewBuilder content: () -> Content) -> some View {
+        content()
+            .datePickerStyle(.compact)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(SupperClubPalette.paper, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(theme.border, lineWidth: 1)
+            )
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier(identifier)
     }
 
     private func normalizeRange() {
