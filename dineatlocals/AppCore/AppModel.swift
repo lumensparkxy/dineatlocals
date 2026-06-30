@@ -2,11 +2,39 @@ import Observation
 import SwiftData
 import SwiftUI
 
-enum MarketplaceTab: Hashable {
+enum MarketplaceTab: String, CaseIterable, Identifiable, Hashable {
     case discover
     case requests
     case host
     case profile
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .discover:
+            "Discover"
+        case .requests:
+            "Requests"
+        case .host:
+            "Host"
+        case .profile:
+            "Profile"
+        }
+    }
+
+    var systemImageName: String {
+        switch self {
+        case .discover:
+            "sparkles.rectangle.stack"
+        case .requests:
+            "tray.full"
+        case .host:
+            "house.lodge"
+        case .profile:
+            "person.crop.circle"
+        }
+    }
 }
 
 @MainActor

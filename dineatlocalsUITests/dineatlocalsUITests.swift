@@ -1,8 +1,24 @@
 import XCTest
+import UIKit
 
 final class dineatlocalsUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
+    }
+
+    @MainActor
+    func testIpadUsesSidebarNavigation() throws {
+        try XCTSkipUnless(UIDevice.current.userInterfaceIdiom == .pad, "iPad-only layout check")
+
+        let app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(app.buttons["root.sidebar.discover"].waitForExistence(timeout: 5))
+        app.buttons["root.sidebar.requests"].tap()
+        XCTAssertTrue(app.staticTexts["Requests"].waitForExistence(timeout: 5))
+
+        app.buttons["root.sidebar.host"].tap()
+        XCTAssertTrue(app.buttons["Create Experience"].waitForExistence(timeout: 5))
     }
 
     @MainActor

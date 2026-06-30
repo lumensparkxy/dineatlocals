@@ -1,5 +1,12 @@
 import SwiftUI
 
+extension View {
+    func festiveReadableColumn(maxWidth: CGFloat = 980) -> some View {
+        frame(maxWidth: maxWidth, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .center)
+    }
+}
+
 struct FestiveTabTheme {
     let heroTop: Color
     let heroBottom: Color

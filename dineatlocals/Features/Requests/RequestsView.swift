@@ -44,6 +44,7 @@ struct RequestsView: View {
                 .padding(.horizontal, 18)
                 .padding(.top, 20)
                 .padding(.bottom, 32)
+                .festiveReadableColumn()
             }
             .accessibilityIdentifier("requests.scroll")
         }

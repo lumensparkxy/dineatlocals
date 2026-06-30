@@ -39,6 +39,7 @@ struct ExperienceDetailView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 16)
                         .padding(.bottom, appModel.canCurrentUserRequest(experience) ? 124 : 34)
+                        .festiveReadableColumn(maxWidth: 980)
                     }
 
                     if appModel.canCurrentUserRequest(experience) {
@@ -324,6 +325,8 @@ struct ExperienceDetailView: View {
         .padding(.horizontal, 20)
         .padding(.top, 14)
         .padding(.bottom, 12)
+        .frame(maxWidth: 760)
+        .frame(maxWidth: .infinity)
         .background(.ultraThinMaterial)
         .shadow(color: SupperClubPalette.warmShadow.opacity(0.10), radius: 16, y: -6)
     }

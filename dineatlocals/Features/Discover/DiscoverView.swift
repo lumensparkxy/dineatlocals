@@ -17,6 +17,7 @@ struct DiscoverView: View {
                 .padding(.horizontal, 18)
                 .padding(.top, 20)
                 .padding(.bottom, 34)
+                .festiveReadableColumn(maxWidth: 1080)
             }
         }
         .toolbar(.hidden, for: .navigationBar)
