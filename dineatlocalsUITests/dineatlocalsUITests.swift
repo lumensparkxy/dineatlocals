@@ -133,6 +133,35 @@ final class dineatlocalsUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Accept"].waitForExistence(timeout: 5))
     }
 
+    @MainActor
+    func testHostCanAcceptAndDeclineRequests() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let acceptedRequestID = "8849e9a9-5627-4987-b9e8-fd92030e4d85"
+        let declinedRequestID = "f408513e-d5e8-40e9-81c9-48e8d4517a0c"
+
+        XCTAssertTrue(app.tabBars.buttons["Requests"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Requests"].tap()
+        app.buttons["requests.inbox.hosting"].tap()
+
+        let acceptButton = app.descendants(matching: .any)["request.accept.\(acceptedRequestID)"]
+        XCTAssertTrue(scrollUntilExists(acceptButton, in: app, scrollViewIdentifier: "requests.scroll"))
+        acceptButton.tap()
+
+        assertRequestStatus("Accepted", requestID: acceptedRequestID, in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["request.accept.\(acceptedRequestID)"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.descendants(matching: .any)["request.decline.\(acceptedRequestID)"].exists)
+
+        let declineButton = app.descendants(matching: .any)["request.decline.\(declinedRequestID)"]
+        XCTAssertTrue(scrollUntilExists(declineButton, in: app, scrollViewIdentifier: "requests.scroll"))
+        declineButton.tap()
+
+        assertRequestStatus("Declined", requestID: declinedRequestID, in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["request.accept.\(declinedRequestID)"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.descendants(matching: .any)["request.decline.\(declinedRequestID)"].exists)
+    }
+
     private func dayIdentifier(daysFromToday: Int) -> String {
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.date(byAdding: .day, value: daysFromToday, to: Date()) ?? Date()
@@ -149,6 +178,19 @@ final class dineatlocalsUITests: XCTestCase {
     ) {
         let element = app.descendants(matching: .any)[identifier]
         XCTAssertTrue(element.waitForExistence(timeout: 5), "\(identifier) should exist", file: file, line: line)
+    }
+
+    @MainActor
+    private func assertRequestStatus(
+        _ expectedStatus: String,
+        requestID: String,
+        in app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let status = app.staticTexts["request.status.\(requestID)"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5), "request.status.\(requestID) should exist", file: file, line: line)
+        XCTAssertEqual(status.label, expectedStatus, file: file, line: line)
     }
 
     @MainActor
