@@ -77,7 +77,7 @@ struct RequestsView: View {
                         .accessibilityIdentifier("requests.inbox.\(inbox.rawValue)")
                     }
                 }
-                .accessibilityIdentifier("requests.inbox")
+                .accessibilityElement(children: .contain)
 
                 LazyVGrid(columns: statColumns, spacing: 10) {
                     FestiveMetricChip(theme: theme, value: "\(displayedRequests.count)", label: "total")
